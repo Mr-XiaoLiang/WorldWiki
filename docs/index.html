@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>另一个代码构成的世界</title>
+  <meta name="description" content="时间、星际、种族与器物的一份设定集合。">
+  <link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+  <div id="app" v-cloak>
+    <header class="topbar">
+      <div class="topbar__inner">
+        <button class="icon-btn topbar__menu" @click="sidebarOpen = !sidebarOpen" aria-label="展开目录">☰</button>
+        <a class="brand" href="#/">另一个代码构成的世界</a>
+
+        <div class="search">
+          <input class="search__input"
+                 type="search"
+                 v-model="query"
+                 @focus="searchOpen = true"
+                 @keydown.esc="query = ''"
+                 placeholder="搜索标题与正文"
+                 aria-label="搜索">
+          <div class="search__panel" v-if="searchOpen && query.trim()">
+            <a v-for="result in results"
+               :key="result.slug"
+               class="search__item"
+               :href="'#/' + result.slug"
+               @click="query = ''">
+              <span class="search__title">{{ result.title }}</span>
+              <span class="search__snippet" v-html="result.snippet"></span>
+            </a>
+            <p class="search__empty" v-if="!results.length">未找到匹配条目</p>
+          </div>
+        </div>
+
+        <button class="icon-btn" @click="toggleTheme" :aria-label="theme === 'dark' ? '切换至浅色模式' : '切换至深色模式'">
+          {{ theme === 'dark' ? '☀' : '☾' }}
+        </button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" :class="{ 'is-open': sidebarOpen }">
+        <div class="sidebar__group" v-for="group in groups" :key="group.dir">
+          <a class="sidebar__title" :href="'#/' + group.slug" @click="sidebarOpen = false">{{ group.title }}</a>
+          <a v-for="item in group.items"
+             :key="item.slug"
+             class="sidebar__link"
+             :class="{ 'is-active': slug === item.slug }"
+             :href="'#/' + item.slug"
+             @click="sidebarOpen = false">{{ item.title }}</a>
+        </div>
+      </aside>
+
+      <main class="content">
+        <p class="state" v-if="loading">正在读取档案……</p>
+
+        <div class="state" v-else-if="error">
+          <p>{{ error }}</p>
+          <button class="btn" @click="load">重新读取</button>
+        </div>
+
+        <template v-else>
+          <section class="home" v-if="isHome">
+            <div class="hero">
+              <span class="hero__kicker">ARCHIVE / 档案库</span>
+              <h1 class="hero__title">另一个代码构成的世界</h1>
+              <p class="hero__lead">时间、星际、种族与器物的一份设定集合。</p>
+              <p class="hero__meta">{{ groups.length }} 个分类 · 持续增补</p>
+            </div>
+
+            <div class="entry-grid">
+              <a v-for="group in groups" :key="group.dir" class="entry-card" :href="'#/' + group.slug">
+                <span class="entry-card__label">{{ group.title }}</span>
+                <span class="entry-card__desc">{{ group.summary }}</span>
+                <span class="entry-card__foot">
+                  <span class="entry-card__count">{{ group.items.length }} 篇</span>
+                  <span class="entry-card__arrow">进入 →</span>
+                </span>
+              </a>
+            </div>
+
+            <h2 class="section-label">阅读约定</h2>
+            <ul class="reading-notes">
+              <li>顶部标签切换分类，左侧列表为分类内全部条目。</li>
+              <li>检索框同时匹配条目标题与正文内容。</li>
+              <li>右上角切换深浅模式，选择结果会被记住。</li>
+              <li>新增 Markdown 文件放入对应文件夹即可出现在导航与搜索中。</li>
+            </ul>
+          </section>
+
+          <article class="markdown" v-else v-html="html"></article>
+
+          <nav class="pager" v-if="!isHome && (pager.prev || pager.next)">
+            <a class="pager__item" v-if="pager.prev" :href="'#/' + pager.prev.slug">
+              <span class="pager__hint">上一篇</span>
+              <span class="pager__name">{{ pager.prev.title }}</span>
+            </a>
+            <a class="pager__item pager__item--next" v-if="pager.next" :href="'#/' + pager.next.slug">
+              <span class="pager__hint">下一篇</span>
+              <span class="pager__name">{{ pager.next.title }}</span>
+            </a>
+          </nav>
+        </template>
+      </main>
+
+      <aside class="toc" v-if="!isHome && toc.length">
+        <span class="toc__title">本页目录</span>
+        <a v-for="heading in toc" :key="heading.id" class="toc__link" :href="'#' + heading.id" @click.prevent="scrollTo(heading.id)">{{ heading.text }}</a>
+      </aside>
+    </div>
+
+    <footer class="footer">
+      <span>CodeOfAnotherWorld · 设定集合</span>
+      <a href="https://github.com/Mr-XiaoLiang/WorldWiki" target="_blank" rel="noreferrer noopener">GitHub</a>
+    </footer>
+  </div>
+
+  <script src="./assets/vendor/vue.global.prod.js"></script>
+  <script src="./assets/vendor/marked.min.js"></script>
+  <script src="./assets/app.js"></script>
+</body>
+</html>
