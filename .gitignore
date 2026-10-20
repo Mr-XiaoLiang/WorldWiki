@@ -1,0 +1,11 @@
+/node_modules/
+/.idea/
+/.codebuddy/
+# 构建产物与本地缓存，不入库
+/site/
+/.cache/
+/__pycache__/
+*.pyc
+
+# 本地预览环境
+/.venv/
