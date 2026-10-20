@@ -1,14 +1,13 @@
 # ---------------------------------------------------------------------------
-# 站点地址：上线前将 USERNAME 替换为实际 GitHub 用户名。
-# 部署为 <用户名>.github.io/CodeOfAnotherWorld/ 子路径时，site_url 必须包含该子路径，
-# 否则搜索索引与站点地图中的链接会指向错误位置。
+# 站点地址：部署为 https://mr-xiaoliang.github.io/WorldWiki/ 子路径。
+# 仓库更名后需同步修改 site_url 与 repo_url，否则搜索索引与站点地图中的链接会指向错误位置。
 # ---------------------------------------------------------------------------
 
 site_name: 另一个代码构成的世界
 site_description: 时间、星际、种族与器物的一份设定集合。
-site_url: https://USERNAME.github.io/CodeOfAnotherWorld/
-repo_url: https://github.com/USERNAME/CodeOfAnotherWorld
-repo_name: USERNAME/CodeOfAnotherWorld
+site_url: https://mr-xiaoliang.github.io/WorldWiki/
+repo_url: https://github.com/Mr-XiaoLiang/WorldWiki
+repo_name: Mr-XiaoLiang/WorldWiki
 
 docs_dir: docs
 site_dir: site
